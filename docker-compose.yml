@@ -1,0 +1,21 @@
+version: "3.5"
+services:
+  graphql-server:
+    build: .
+    command: ['/usr/local/bin/graphql-server', '--database=http://elasticsearch:9200', '--listen=0.0.0.0:8080', '--sensors=/etc/sensors.toml']
+    volumes:
+      - "./sensors.toml:/etc/sensors.toml:ro"
+    ports:
+      - "8080:8080"
+
+  dummy-data-loader:
+    build: .
+    command: ['/usr/local/bin/dummy-data-loader', '--endpoint=http://graphql-server:8080/graphql']
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"

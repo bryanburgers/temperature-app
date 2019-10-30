@@ -1,0 +1,12 @@
+[package]
+name = "dummy-data-loader"
+version = "0.1.0"
+authors = ["Bryan Burgers <bryan@burgers.io>"]
+edition = "2018"
+
+[dependencies]
+clap = "^2.33.0"
+reqwest = "^0.9.22"
+serde = "^1.0.102"
+serde_json = "^1.0.41"
+url = "^2.1.0"

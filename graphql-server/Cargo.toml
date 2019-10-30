@@ -1,0 +1,22 @@
+[package]
+name = "graphql-server"
+version = "0.1.0"
+authors = ["Bryan Burgers <bryan@burgers.io>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+temperature-app = { version = "0.1.0", path = "../temperature-app" }
+juniper = "^0.14.1"
+chrono = { version = "^0.4.9", features = ["serde"] }
+clap = "^2.33.0"
+serde = "^1.0.102"
+serde_json = "^1.0.41"
+reqwest = "^0.9.22"
+toml = "^0.5.4"
+url = "^2.1.0"
+
+# I'm not sure which one I'll use yet!
+warp = "*"
+juniper_warp = "*"

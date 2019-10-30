@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Temperature Measurements</title>
+        <style>
+            html {
+                background: #ccc;
+                font-family: sans-serif;
+            }
+            section {
+                border: 1px solid #ddd;
+                padding: 2em;
+                margin-bottom: 1em;
+                box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+                background: white;
+                max-width: 20em;
+                padding-bottom: 1em;
+                border-radius: 4px;
+            }
+            section .current {
+                text-align: center;
+                font-size: 3rem;
+            }
+            section .value {
+                font-size: 7rem;
+            }
+            section .unit {
+                color: #999;
+            }
+            section .name {
+                font-weight: bold;
+                font-size: 2rem;
+                margin-bottom: 0.4rem;
+                text-align: center;
+            }
+            section .updated {
+                padding-top: 1em;
+                text-align: right;
+                font-style: italic;
+                display: block;
+                color: #999;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <section data-id="d0f7083ca3b1">
+                <div class="current"><span class="value">?</span> <span class="unit">&deg;F</span></div>
+                <div class="name">?</div>
+                <time class="updated">?</time>
+            </section>
+            <section data-id="f4d55889b1d6">
+                <div class="current"><span class="value">?</span> <span class="unit">&deg;F</span></div>
+                <div class="name">?</div>
+                <time class="updated">?</time>
+            </section>
+        </main>
+        <a href="/graphiql">graphiql</a>
+        <script>
+            const query = `
+                query {
+                    dht: device(address:"f4d55889b1d6") {
+                        address
+                        name
+                        description
+                        currentMeasurement {
+                            date
+                            tempF
+                        }
+                        measurements(count: 2) {
+                            date
+                            tempF
+                            tempC
+                            tempRawC
+                        }
+                    }
+                    sense: device(address:"d0f7083ca3b1") {
+                        address
+                        name
+                        description
+                        currentMeasurement {
+                            date
+                            tempF
+                        }
+                        measurements(count: 2) {
+                            date
+                            tempF
+                            tempC
+                            tempRawC
+                        }
+                    }
+                }
+            `
+            async function updateData() {
+                let response = await fetch("/graphql", {
+                    method: "POST",
+                    headers: {
+                        'content-type': 'application/json',
+                        accept: 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                    })
+                })
+                const responseData = await response.json()
+                const data = responseData.data
+
+                for (const key of Object.keys(data)) {
+                    const obj = data[key]
+                    const section = document.querySelector(`[data-id="${obj.address}"]`)
+                    if (!section) {
+                        continue
+                    }
+                    section.querySelector('.value').innerText = obj.currentMeasurement.tempF.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+                    section.querySelector('.name').innerText = obj.name
+                    section.querySelector('.updated').innerText = obj.currentMeasurement.date
+                }
+            }
+            updateData()
+            setInterval(() => {
+                updateData()
+            }, 1000)
+        </script>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+[[sensors]]
+address = "d0f7083ca3b1"
+name = "Upstairs"
+description = "Arduino Nano 33 BLE Sense with on-board temperature sensor, which seems to be innaccurate"
+# The adjustment that is applied to the data *on the way out*. I.e., we store
+# the untransformed data we receive from the sensor in ElasticSearch, and when
+# requested, we adjust the data by this amount.
+adjustment = -6.16
+
+[[sensors]]
+address = "f4d55889b1d6"
+name = "Basement"
+description = "Arduino Nano 33 BLE (not a Sense) with a DHT11 temperature sensor"
+adjustment = 0

@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "dummy-data-loader",
+    "graphql-server",
+    "temperature-app",
+]
